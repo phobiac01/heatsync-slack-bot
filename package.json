@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "A development bot for heatsync related things.",
   "main": "bot.js",
-  "scripts":{
-    "start":"nodemon . bot.js"
+  "scripts": {
+    "start": "nodemon . bot.js"
   },
   "author": "BlueDragon",
   "dependencies": {
-    "discord.js": "^11.3.2"
+    "discord.js": "^11.3.2",
+    "slackbots": "^1.2.0"
   }
 }
