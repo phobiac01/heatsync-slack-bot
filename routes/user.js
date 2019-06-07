@@ -1,0 +1,2 @@
+var SlackBot = require('slackbots');
+
