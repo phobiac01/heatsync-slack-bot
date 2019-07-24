@@ -41,6 +41,10 @@ rtm.on('message', (event) => {
             rtm.sendMessage('>>> ERR: Please only use numbers', event.channel);
           }
           break;
+        case 'shutdown':
+          rtm.sendMessage('>>> HSL Slackbot is shutting down...' ,event.channel);
+          process.exit(1);
+          break;
         default:
           throw "ERR: No valid commands found.";
           break;
