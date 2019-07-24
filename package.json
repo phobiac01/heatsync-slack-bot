@@ -1,13 +1,22 @@
 {
   "name": "hsl-slackbot",
   "version": "1.0.0",
-  "description": "A development bot for heatsync related things.",
-  "main": "bot.js",
+  "description": "A bot on the salck platform for the heatsync group",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon . bot.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "BlueDragon",
+  "keywords": [
+    "slack",
+    "bot",
+    "heatsync",
+    "labs",
+    "heatsynclabs"
+  ],
+  "author": "BlueDragonDev",
+  "license": "ISC",
   "dependencies": {
-    "slackbots": "^1.2.0"
+    "@slack/rtm-api": "^5.0.1",
+    "slackbot": "0.0.2"
   }
 }
