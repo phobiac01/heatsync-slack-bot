@@ -3,6 +3,7 @@ const token = 'xoxb-653557557380-656426146838-Ba5CUBV3DTQR3oeKcRUti6Pr';
 const rtm = new RTMClient(token);
 const date = require('date-and-time');
 const weather = require('weather-js');
+const fs = require('fs');
 
 var invoker = 'hsl.';
 
@@ -18,12 +19,16 @@ rtm.on('message', (event) => {
       //message = message.slice(invoker.length);//trims invoker out of the stream
       var arg = message.split(" "); //converts stream to an array
       var command = arg.shift(); //extracts the command
-      var sender = message.author;
+      var sender = message.author; //FIX THIS!!
 
 
       switch(command){
         case 'ping':
           rtm.sendMessage('>>> Pong!', event.channel);
+          break;
+        case 'debug':
+          //var diag = event.user;
+          //rtm.sendMessage(diag ,event.channel);
           break;
         case 'hi':
         case 'hello':
@@ -59,7 +64,6 @@ rtm.on('message', (event) => {
           try {
             weather.find({search: arg.join(" "), degreeType: "F"}, function(err, result) {
               if (err) rtm.sendMessage(err, event.channel);
-
               var current = result[0].current;
 
               var wEmoji = '';
@@ -92,18 +96,46 @@ rtm.on('message', (event) => {
           const today = date.format(new Date(), 'ddd, MMM DD');
           rtm.sendMessage('>>> It is ' + today, event.channel);
           break;
+        /*=======================================================================*/
 
+        case 'unlock':
+            if (arg[0] == 'doors' || arg[1] == 'doors' || arg[0] == 'lab' || arg[1] == 'lab'){
+              try {
+                const today = date.format(new Date(), 'ddd, MMM DD');
+                const now = date.format(new Date(), 'hh:mm A');
+                /*check member database
+                if the database member Ux33Hx8GG has a labaccess property with
+                the value set to true, send command to door to unlock*/
+                if (sender == 'Databaseperms') {
+                  console.log('The lab door have been unlocked by ' + sender + ' at ' + today + ' ' + now);
+                  rtm.sendMessage('The doors have been unlocked => Logged to database', event.channel);
+                } else {
+                  console.log(sender + ' tried and failed to unlock the lab doors at ' + today + ' ' + now);
+                  rtm.sendMessage('>>> You do not have the proper permissions to unlock the doors', event.channel);
+                }
+              } catch (err) {
+                rtm.sendMessage('>>> An error has occured!', event.channel);
+                console.log(err);
+              }
+            }
+          break;
 
         /*=======================================================================*/
         case 'shutdown':
-          rtm.sendMessage('>>> HSL Slackbot is shutting down...' , event.channel);
-          process.exit(0);
+          if (event.user == 'UJWK0D78S') {
+            rtm.sendMessage('>>> HSL Slackbot is shutting down...' , event.channel);
+            process.exit(0);
+          } else {
+            rtm.sendMessage('>>> Bitch.\n>>> Only the Magnificent Chase can do that!!! :P' , event.channel);
+          }
           break;
         default:
           throw "-ERR: Not a valid command";
           break;
         } //switch close
-
+        fs.writeFile('usageData.log', '\n+1 Command run successfully without errors', (err) => {
+          if (err) throw err;
+        });
     }//'if invoker present' close
   } catch(err) {
     console.log(err);
