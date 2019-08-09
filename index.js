@@ -1,3 +1,4 @@
+//Slackbot for HSL
 const { RTMClient } = require('@slack/rtm-api');
 const token = 'xoxb-653557557380-656426146838-Ba5CUBV3DTQR3oeKcRUti6Pr';
 const rtm = new RTMClient(token);
@@ -6,6 +7,11 @@ const weather = require('weather-js');
 const fs = require('fs');
 
 var invoker = 'hsl.';
+var botStart;
+var botStartInt;
+var botStartInth;
+var botStartIntm;
+var botStartIntd;
 
 
 rtm.on('message', (event) => {
@@ -29,7 +35,25 @@ rtm.on('message', (event) => {
         case 'debug':
           //var diag = event.user;
           //rtm.sendMessage(diag ,event.channel);
-          console.log(sender);
+          console.log("} Debug Run > " + sender);
+          break;
+        case 'uptime':
+          const nowH = parseInt(date.format(new Date(), 'H'), 10);
+          const nowM = parseInt(date.format(new Date(), 'm'), 10);
+          const nowD = parseInt(date.format(new Date(), 'D'), 10);
+
+          var uptimeM = nowM - botStartIntm;
+          var uptimeH = nowH - botStartInth;
+          if ((nowD - botStartIntd) > 0) {
+            var numDaysRunning = nowD - botStartIntd;
+            for (var i = 0; i < numDaysRunning; i++) {
+              uptimeH += 24;
+            }
+          }
+
+          var uptime = "The bot has been running for " + uptimeH + " hours and " + uptimeM + " minutes";
+
+          rtm.sendMessage(botStart + '\n' + uptime, event.channel);
           break;
         case 'hi':
         case 'hello':
@@ -93,19 +117,19 @@ rtm.on('message', (event) => {
           }
           break;
         case 'time':
-          const now = date.format(new Date(), 'hh:mm A');
+          now = date.format(new Date(), 'hh:mm A');
           rtm.sendMessage('>>> The time is ' + now, event.channel);
           break;
         case 'date':
-          const today = date.format(new Date(), 'ddd, MMM DD');
+          today = date.format(new Date(), 'ddd, MMM DD');
           rtm.sendMessage('>>> It is ' + today, event.channel);
           break;
         /*=======================================================================*/
 
         case 'unlock':
             try {
-              const today = date.format(new Date(), 'ddd, MMM DD');
-              const now = date.format(new Date(), 'hh:mm A');
+              var today = date.format(new Date(), 'ddd, MMM DD');
+              var now = date.format(new Date(), 'hh:mm A');
               /*check member database
               if the database member Ux33Hx8GG has a labaccess property with
               the value set to true, send command to door to unlock*/
@@ -124,8 +148,8 @@ rtm.on('message', (event) => {
 
         case 'lock':
             try {
-              const today = date.format(new Date(), 'ddd, MMM DD');
-              const now = date.format(new Date(), 'hh:mm A');
+              today = date.format(new Date(), 'ddd, MMM DD');
+              now = date.format(new Date(), 'hh:mm A');
               /*check member database
               if the database member Ux33Hx8GG has a labaccess property with
               the value set to true, send command to door to unlock*/
@@ -155,9 +179,6 @@ rtm.on('message', (event) => {
           throw "-ERR: Not a valid command";
           break;
         } //switch close
-        fs.writeFile('usageData.log', '\n+1 Command run successfully without errors', (err) => {
-          if (err) throw err;
-        });
     }//'if invoker present' close
   } catch(err) {
     console.log(err);
@@ -168,7 +189,15 @@ rtm.on('message', (event) => {
 (async () => {
   try{
     await rtm.start();
-    console.log('Bot connected Successfully');
+    const today = date.format(new Date(), 'ddd, MMM DD');
+    const now = date.format(new Date(), 'hh:mm A');
+
+    botStart = "The bot started on " + today + " at " + now;
+    botStartInth = parseInt(date.format(new Date(), 'H'), 10);
+    botStartIntm = parseInt(date.format(new Date(), 'm'), 10);
+    botStartIntd = parseInt(date.format(new Date(), 'D'), 10);
+    console.log('HSL Slackbot connected Successfully');
+    console.log(today + " " + now);
   } catch(err) {
     console.log(err);
   }
