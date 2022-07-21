@@ -1,6 +1,6 @@
 //Slackbot for HSL
 const { RTMClient } = require('@slack/rtm-api');
-const token = 'xoxb-653557557380-656426146838-Ba5CUBV3DTQR3oeKcRUti6Pr';
+const token = 'The previously used slack token and API access credentials have been revoked so this project can go public';
 const rtm = new RTMClient(token);
 const date = require('date-and-time');
 const weather = require('weather-js');
@@ -172,7 +172,7 @@ rtm.on('message', (event) => {
             rtm.sendMessage('>>> HSL Slackbot is shutting down...' , event.channel);
             process.exit(0);
           } else {
-            rtm.sendMessage('>>> Bitch.\n>>> Only the Magnificent Chase can do that!!! :P' , event.channel);
+            rtm.sendMessage('>>> Illegal!\n>>> Only the Magnificent Chase can do that!!! :P' , event.channel);
           }
           break;
         default:
